@@ -131,6 +131,89 @@ local game_client = {}
         notifications = {},
     }
 
+            function utility:Create(instanceType, instanceProperties, container)
+            local instance = Drawing.new(instanceType)
+            local parent
+            --
+            if instanceProperties["Parent"] or instanceProperties["parent"] then
+                parent = instanceProperties["Parent"] or instanceProperties["parent"]
+                --
+                instanceProperties["parent"] = nil
+                instanceProperties["Parent"] = nil
+            end
+            --
+            for property, value in pairs(instanceProperties) do
+                if property and value then
+                    if property == "Size" or property == "Size" then
+                        if instanceType == "Text" then
+                            instance.Size = value
+                        else
+                            local xSize = (value.X.Scale * ((parent and parent.Size) or ws.CurrentCamera.ViewportSize).X) + value.X.Offset
+                            local ySize = (value.Y.Scale * ((parent and parent.Size) or ws.CurrentCamera.ViewportSize).Y) + value.Y.Offset
+                            --
+                            instance.Size = Vector2.new(xSize, ySize)
+                        end
+                    elseif property == "Position" or property == "position" then
+                        if instanceType == "Text" then
+                            local xPosition = ((((parent and parent.Position) or Vector2.new(0, 0)).X) + (value.X.Scale * ((typeof(parent.Size) == "number" and parent.TextBounds) or parent.Size).X)) + value.X.Offset
+                            local yPosition = ((((parent and parent.Position) or Vector2.new(0, 0)).Y) + (value.Y.Scale * ((typeof(parent.Size) == "number" and parent.TextBounds) or parent.Size).Y)) + value.Y.Offset
+                            --
+                            instance.Position = Vector2.new(xPosition, yPosition)
+                        else
+                            local xPosition = ((((parent and parent.Position) or Vector2.new(0, 0)).X) + value.X.Scale * ((parent and parent.Size) or ws.CurrentCamera.ViewportSize).X) + value.X.Offset
+                            local yPosition = ((((parent and parent.Position) or Vector2.new(0, 0)).Y) + value.Y.Scale * ((parent and parent.Size) or ws.CurrentCamera.ViewportSize).Y) + value.Y.Offset
+                            --
+                            instance.Position = Vector2.new(xPosition, yPosition)
+                        end
+                    elseif property == "Color" or property == "color" then
+                        if typeof(value) == "string" then
+                            instance["Color"] = shared.theme[value]
+                            --
+                            if value == "accent" then
+                                shared.accents[#shared.accents + 1] = instance
+                            end
+                        else
+                            instance[property] = value
+                        end
+                    else
+                        instance[property] = value
+                    end
+                end
+            end
+            --
+            shared.drawing_containers[container][#shared.drawing_containers[container] + 1] = instance
+            --
+            return instance
+        end
+    
+        function utility:Update(instance, instanceProperty, instanceValue, instanceParent)
+            if instanceProperty == "Size" or instanceProperty == "Size" then
+                local xSize = (instanceValue.X.Scale * ((instanceParent and instanceParent.Size) or ws.CurrentCamera.ViewportSize).X) + instanceValue.X.Offset
+                local ySize = (instanceValue.Y.Scale * ((instanceParent and instanceParent.Size) or ws.CurrentCamera.ViewportSize).Y) + instanceValue.Y.Offset
+                --
+                instance.Size = Vector2.new(xSize, ySize)
+            elseif instanceProperty == "Position" or instanceProperty == "position" then
+                    local xPosition = ((((instanceParent and instanceParent.Position) or Vector2.new(0, 0)).X) + (instanceValue.X.Scale * ((typeof(instanceParent.Size) == "number" and instanceParent.TextBounds) or instanceParent.Size).X)) + instanceValue.X.Offset
+                    local yPosition = ((((instanceParent and instanceParent.Position) or Vector2.new(0, 0)).Y) + (instanceValue.Y.Scale * ((typeof(instanceParent.Size) == "number" and instanceParent.TextBounds) or instanceParent.Size).Y)) + instanceValue.Y.Offset
+                    --
+                    instance.Position = Vector2.new(xPosition, yPosition)
+            elseif instanceProperty == "Color" or instanceProperty == "color" then
+                if typeof(instanceValue) == "string" then
+                    instance.Color = shared.theme[instanceValue]
+                    --
+                    if instanceValue == "accent" then
+                        shared.accents[#shared.accents + 1] = instance
+                    else
+                        if table.find(shared.accents, instance) then
+                            table.remove(shared.accents, table.find(shared.accents, instance))
+                        end
+                    end
+                else
+                    instance.Color = instanceValue
+                end
+            end
+        end
+
             function utility:Connection(connectionType, connectionCallback)
             local connection = connectionType:Connect(connectionCallback)
             shared.connections[#shared.connections + 1] = connection
