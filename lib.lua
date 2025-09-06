@@ -107,49 +107,14 @@ function library:Window(windowProperties)
         Size = 13,
         Position = UDim2.new(0.5, 0, 0, 3)
     }, "menu")
-
-    local held_keys = {}
-    local movement_connections = {}
     
     -- // Connections
     utility:Connection(uis.InputBegan, function(Input)
         if shared.toggleKey[2] and Input.KeyCode then
             if shared.moveKeys["Movement"][Input.KeyCode.Name] then
-                local direction = shared.moveKeys["Movement"][Input.KeyCode.Name]
-                window:Movement("Movement", direction)
-                if Input.KeyCode.Name == "Up" or Input.KeyCode.Name == "Down" then
-                    held_keys[Input.KeyCode.Name] = true
-                    
-                    -- Use task.delay instead of blocking task.wait
-                    task.delay(0.3, function()
-                        if held_keys[Input.KeyCode.Name] then
-                            movement_connections[Input.KeyCode.Name] = task.spawn(function()
-                                while held_keys[Input.KeyCode.Name] do
-                                    window:Movement("Movement", direction)
-                                    task.wait(0.1)
-                                end
-                            end)
-                        end
-                    end)
-                end
+                window:Movement("Movement", shared.moveKeys["Movement"][Input.KeyCode.Name])
             elseif shared.moveKeys["Action"][Input.KeyCode.Name] then
-                local direction = shared.moveKeys["Action"][Input.KeyCode.Name]
-                window:Movement("Action", direction)
-                if Input.KeyCode.Name == "Left" or Input.KeyCode.Name == "Right" then
-                    held_keys[Input.KeyCode.Name] = true
-                    
-                    -- Use task.delay instead of blocking task.wait
-                    task.delay(0.3, function()
-                        if held_keys[Input.KeyCode.Name] then
-                            movement_connections[Input.KeyCode.Name] = task.spawn(function()
-                                while held_keys[Input.KeyCode.Name] do
-                                    window:Movement("Action", direction)
-                                    task.wait(0.1)
-                                end
-                            end)
-                        end
-                    end)
-                end
+                window:Movement("Action", shared.moveKeys["Action"][Input.KeyCode.Name])
             end
         end
         
@@ -162,16 +127,6 @@ function library:Window(windowProperties)
             return
         elseif shared and Input.KeyCode == shared.loadKey[1] then
             utility:LoadConfig()
-        end
-    end)
-    
-    utility:Connection(uis.InputEnded, function(Input)
-        if Input.KeyCode and (Input.KeyCode.Name == "Up" or Input.KeyCode.Name == "Down" or Input.KeyCode.Name == "Left" or Input.KeyCode.Name == "Right") then
-            held_keys[Input.KeyCode.Name] = false
-            if movement_connections[Input.KeyCode.Name] then
-                task.cancel(movement_connections[Input.KeyCode.Name])
-                movement_connections[Input.KeyCode.Name] = nil
-            end
         end
     end)
     
