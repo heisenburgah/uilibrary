@@ -1,5 +1,7 @@
 --!strict
 --[[
+	https://raw.githubusercontent.com/heisenburgah/uilibrary/refs/heads/main/Maid.lua
+
 	Manages the cleaning of events and other things. Useful for
 	encapsulating state and make deconstructors easy.
 
