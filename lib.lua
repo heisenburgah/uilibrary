@@ -1085,75 +1085,6 @@ return function(shared, utility)
                     --
                     return colorList
                 end
-
-                function library:Notify(text, color) 
-                    if shared and shared.pointers["notifications"]:Get() then
-                        local notification = {
-                            text = text,
-                            drawings = {},
-                            color = color,
-                            start_tick = tick(),
-                            lifetime = 8,
-                        }
-                    
-                        do -- Create Drawings
-                            notification.drawings.shadow_text = utility:Create("Text", {
-                                Center = false,
-                                Outline = false,
-                                Color = Color3.new(),
-                                Transparency = 200/255,
-                                Text = text,
-                                Size = 13,
-                                Font = 2,
-                                ZIndex = 99,
-                                Visible = false
-                            }, "notification")
-                        
-                            notification.drawings.main_text = utility:Create("Text", {
-                                Center = false,
-                                Outline = false,
-                                Color = notification.color,
-                                Transparency = 1,
-                                Text = text,
-                                Size = 13,
-                                Font = 2,
-                                ZIndex = 100,
-                                Visible = false
-                            }, "notification")
-                        end
-                    
-                        function notification:destruct()
-                            local shadow_text_origin = self.drawings.shadow_text.Position
-                            local main_text_origin = self.drawings.main_text.Position
-                            local shadow_text_transparency = self.drawings.shadow_text.Transparency
-                            local main_text_transparency = self.drawings.main_text.Transparency
-                    
-                            for i = 0, 1, 1/60 do
-                                self.drawings.shadow_text.Position = shadow_text_origin:Lerp(Vector2.new(), i)
-                                self.drawings.main_text.Position = main_text_origin:Lerp(Vector2.new(), i)
-                                self.drawings.shadow_text.Transparency = shadow_text_transparency * (1 - i)
-                                self.drawings.main_text.Transparency = main_text_transparency * (1 - i)
-                                rs.RenderStepped:Wait()
-                            end
-
-                            for _,v in next, notification.drawings do
-                                if shared and shared.drawing_containers then
-                                    table.remove(shared.drawing_containers.notification, table.find(shared.drawing_containers.notification, v))
-                                    v:Remove()
-                                end
-                            end
-
-                            self.drawings.main_text = nil
-                            self.drawings.shadow_text = nil
-                            table.clear(self)
-                            self = nil
-                        end
-                    
-                        shared.notifications[#shared.notifications + 1] = notification
-                        return notification
-                    end
-                end
-
                 -- // Returning + Other
                 section.name = sectionName
                 section.text = sectionText
@@ -1173,6 +1104,74 @@ return function(shared, utility)
         end
         -- // Returning
         return window
+    end
+
+    function library:Notify(text, color) 
+        if shared and shared.pointers["notifications"]:Get() then
+            local notification = {
+                text = text,
+                drawings = {},
+                color = color,
+                start_tick = tick(),
+                lifetime = 8,
+            }
+        
+            do -- Create Drawings
+                notification.drawings.shadow_text = utility:Create("Text", {
+                    Center = false,
+                    Outline = false,
+                    Color = Color3.new(),
+                    Transparency = 200/255,
+                    Text = text,
+                    Size = 13,
+                    Font = 2,
+                    ZIndex = 99,
+                    Visible = false
+                }, "notification")
+            
+                notification.drawings.main_text = utility:Create("Text", {
+                    Center = false,
+                    Outline = false,
+                    Color = notification.color,
+                    Transparency = 1,
+                    Text = text,
+                    Size = 13,
+                    Font = 2,
+                    ZIndex = 100,
+                    Visible = false
+                }, "notification")
+            end
+        
+            function notification:destruct()
+                local shadow_text_origin = self.drawings.shadow_text.Position
+                local main_text_origin = self.drawings.main_text.Position
+                local shadow_text_transparency = self.drawings.shadow_text.Transparency
+                local main_text_transparency = self.drawings.main_text.Transparency
+        
+                for i = 0, 1, 1/60 do
+                    self.drawings.shadow_text.Position = shadow_text_origin:Lerp(Vector2.new(), i)
+                    self.drawings.main_text.Position = main_text_origin:Lerp(Vector2.new(), i)
+                    self.drawings.shadow_text.Transparency = shadow_text_transparency * (1 - i)
+                    self.drawings.main_text.Transparency = main_text_transparency * (1 - i)
+                    rs.RenderStepped:Wait()
+                end
+
+                for _,v in next, notification.drawings do
+                    if shared and shared.drawing_containers then
+                        table.remove(shared.drawing_containers.notification, table.find(shared.drawing_containers.notification, v))
+                        v:Remove()
+                    end
+                end
+
+                self.drawings.main_text = nil
+                self.drawings.shadow_text = nil
+                table.clear(self)
+                self = nil
+            end
+        
+            shared.notifications[#shared.notifications + 1] = notification
+            return notification
+        end
     end
 
     return library
