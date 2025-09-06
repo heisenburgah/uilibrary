@@ -14,6 +14,7 @@ return function(shared, utility)
 
 -- Library Functions
 function library:Window(windowProperties)
+    -- // Variables
     local window = {
         current = nil,
         currentindex = 1,
@@ -26,14 +27,18 @@ function library:Window(windowProperties)
     -- // Functions
     function window:Movement(moveAction, moveDirection)
         if moveAction == "Movement" then
-            window.content[window.currentindex]:Turn(false)
+            if window.content[window.currentindex] and window.content[window.currentindex].Turn then
+                window.content[window.currentindex]:Turn(false)
+            end
             --
             local function isSkippable(item)
                 if item and item.pointer then
                     local blatant_mode_enabled = shared.pointers["blatant_mode"] and shared.pointers["blatant_mode"]:Get()
-                    for _, feature in pairs(shared.blatant_features) do
-                        if item.pointer == feature and not blatant_mode_enabled then
-                            return true
+                    if shared.blatant_features then
+                        for _, feature in pairs(shared.blatant_features) do
+                            if item.pointer == feature and not blatant_mode_enabled then
+                                return true
+                            end
                         end
                     end
                 end
@@ -51,9 +56,13 @@ function library:Window(windowProperties)
                 attempts = attempts + 1
             until not isSkippable(window.content[window.currentindex]) or attempts > #window.content or window.currentindex == startIndex
             --
-            window.content[window.currentindex]:Turn(true)
-        else
-            window.content[window.currentindex]:Action(moveDirection)
+            if window.content[window.currentindex] and window.content[window.currentindex].Turn then
+                window.content[window.currentindex]:Turn(true)
+            end
+        elseif moveAction == "Action" then
+            if window.content[window.currentindex] and window.content[window.currentindex].Action then
+                window.content[window.currentindex]:Action(moveDirection)
+            end
         end
     end
     --
