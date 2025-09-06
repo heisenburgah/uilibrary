@@ -27,18 +27,14 @@ function library:Window(windowProperties)
     -- // Functions
     function window:Movement(moveAction, moveDirection)
         if moveAction == "Movement" then
-            if window.content[window.currentindex] and window.content[window.currentindex].Turn then
-                window.content[window.currentindex]:Turn(false)
-            end
+            window.content[window.currentindex]:Turn(false)
             --
             local function isSkippable(item)
-                if item and item.pointer then
+                if item and item.pointer and shared.blatant_features then
                     local blatant_mode_enabled = shared.pointers["blatant_mode"] and shared.pointers["blatant_mode"]:Get()
-                    if shared.blatant_features then
-                        for _, feature in pairs(shared.blatant_features) do
-                            if item.pointer == feature and not blatant_mode_enabled then
-                                return true
-                            end
+                    for _, feature in pairs(shared.blatant_features) do
+                        if item.pointer == feature and not blatant_mode_enabled then
+                            return true
                         end
                     end
                 end
@@ -56,13 +52,9 @@ function library:Window(windowProperties)
                 attempts = attempts + 1
             until not isSkippable(window.content[window.currentindex]) or attempts > #window.content or window.currentindex == startIndex
             --
-            if window.content[window.currentindex] and window.content[window.currentindex].Turn then
-                window.content[window.currentindex]:Turn(true)
-            end
-        elseif moveAction == "Action" then
-            if window.content[window.currentindex] and window.content[window.currentindex].Action then
-                window.content[window.currentindex]:Action(moveDirection)
-            end
+            window.content[window.currentindex]:Turn(true)
+        else
+            window.content[window.currentindex]:Action(moveDirection)
         end
     end
     --
@@ -128,12 +120,15 @@ function library:Window(windowProperties)
                 if Input.KeyCode.Name == "Up" or Input.KeyCode.Name == "Down" then
                     held_keys[Input.KeyCode.Name] = true
                     
-                    task.wait(0.3)
-                    
-                    movement_connections[Input.KeyCode.Name] = task.spawn(function()
-                        while held_keys[Input.KeyCode.Name] do
-                            window:Movement("Movement", direction)
-                            task.wait(0.1)
+                    -- Use task.delay instead of blocking task.wait
+                    task.delay(0.3, function()
+                        if held_keys[Input.KeyCode.Name] then
+                            movement_connections[Input.KeyCode.Name] = task.spawn(function()
+                                while held_keys[Input.KeyCode.Name] do
+                                    window:Movement("Movement", direction)
+                                    task.wait(0.1)
+                                end
+                            end)
                         end
                     end)
                 end
@@ -143,12 +138,15 @@ function library:Window(windowProperties)
                 if Input.KeyCode.Name == "Left" or Input.KeyCode.Name == "Right" then
                     held_keys[Input.KeyCode.Name] = true
                     
-                    task.wait(0.3)
-                    
-                    movement_connections[Input.KeyCode.Name] = task.spawn(function()
-                        while held_keys[Input.KeyCode.Name] do
-                            window:Movement("Action", direction)
-                            task.wait(0.1)
+                    -- Use task.delay instead of blocking task.wait
+                    task.delay(0.3, function()
+                        if held_keys[Input.KeyCode.Name] then
+                            movement_connections[Input.KeyCode.Name] = task.spawn(function()
+                                while held_keys[Input.KeyCode.Name] do
+                                    window:Movement("Action", direction)
+                                    task.wait(0.1)
+                                end
+                            end)
                         end
                     end)
                 end
