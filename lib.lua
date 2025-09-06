@@ -1,12 +1,10 @@
--- UI Library for Rogue Exploit
--- Separated from main script for better performance and modularity
+-- hydroxide.solutions ui released woohooo
 
 -- Services
 local plrs = game:GetService("Players")
 local uis = game:GetService("UserInputService")
 local rs = game:GetService("RunService")
 
--- Return a function that creates the library with dependencies
 return function(shared, utility)
     if not shared or not utility then
         error("Library requires 'shared' and 'utility' dependencies to be passed")
@@ -16,7 +14,6 @@ return function(shared, utility)
 
 -- Library Functions
 function library:Window(windowProperties)
-    -- // Variables
     local window = {
         current = nil,
         currentindex = 1,
