@@ -118,14 +118,14 @@ return function(shared, utility)
                 end
             end
             
-            if shared and Input.KeyCode == shared.toggleKey[1] then
+            if shared and shared.toggleKey and shared.toggleKey[1] and Input.KeyCode == shared.toggleKey[1] then
                 utility:Toggle()
-            elseif shared and Input.KeyCode == shared.unloadKey[1] then
+            elseif shared and shared.unloadKey and shared.unloadKey[1] and Input.KeyCode == shared.unloadKey[1] then
                 utility:Unload()
-            elseif shared and Input.KeyCode == shared.saveKey[1] then
+            elseif shared and shared.saveKey and shared.saveKey[1] and Input.KeyCode == shared.saveKey[1] then
                 utility:SaveConfig()
                 return
-            elseif shared and Input.KeyCode == shared.loadKey[1] then
+            elseif shared and shared.loadKey and shared.loadKey[1] and Input.KeyCode == shared.loadKey[1] then
                 utility:LoadConfig()
             end
         end)
