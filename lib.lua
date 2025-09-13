@@ -182,6 +182,7 @@ return function(shared, utility)
                 Size = 13,
                 Position = UDim2.new(0, 5, 0, 19 + ((#window.content) * 17))
             }, "menu")
+
             -- // Nested Functions
             function page:Turn(state)
                 if state then
@@ -1199,7 +1200,7 @@ return function(shared, utility)
                 Outline = true,
                 Font = 2,
                 Color = color or shared.theme.text,
-                Size = 12,
+                Size = 13,
                 Position = UDim2.new(0, 5, 0, yOffset)
             }, "status")
             
