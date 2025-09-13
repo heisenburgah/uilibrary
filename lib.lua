@@ -1228,11 +1228,11 @@ return function(shared, utility)
                 newPosition.Y.Scale * (workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize.Y or 768) + newPosition.Y.Offset
             )
             
-            -- Only update the main frame
+            -- Only update the main frame - let everything else stay relative
             statusFrame.Position = framePos
             
-            -- Fix the title positioning - Center=true means position is the center point
-            statusTitle.Position = Vector2.new(framePos.X + 100, framePos.Y + 3) -- Center of 200px wide window
+            -- Fix the title positioning - it needs to be truly centered
+            statusTitle.Position = Vector2.new(framePos.X + 100, framePos.Y + 3) -- 200px/2 = 100px for center
             
             -- Only update status items since they're not proper children
             for i, item in pairs(statusWindow.statusItems) do
