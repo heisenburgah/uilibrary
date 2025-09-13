@@ -1158,6 +1158,9 @@ return function(shared, utility)
             Position = UDim2.new(0.5, 0, 0, 3)
         }, "menu")
         
+        -- Expose frame for external position updates immediately
+        statusWindow.statusFrame = statusFrame
+        
         -- // Functions
         function statusWindow:SetVisible(visible)
             statusWindow.visible = visible
@@ -1218,9 +1221,6 @@ return function(shared, utility)
             local newPosition = UDim2.new(xPercent/100, -110, yPercent/100, -100)
             utility:Update(statusFrame, "Position", newPosition)
         end
-        
-        -- Expose frame for external position updates
-        statusWindow.statusFrame = statusFrame
         
         return statusWindow
     end
