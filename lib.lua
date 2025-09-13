@@ -1124,7 +1124,7 @@ return function(shared, utility)
             Color = shared.theme.inline,
             Size = UDim2.new(0, 200, 0, 19),
             Position = windowPosition
-        }, "menu")
+        }, "status")
         
         local statusInline = utility:Create("Square", {
             Parent = statusFrame,
@@ -1134,7 +1134,7 @@ return function(shared, utility)
             Color = shared.theme.dark,
             Size = UDim2.new(1, -2, 1, -4),
             Position = UDim2.new(0, 1, 0, 3)
-        }, "menu")
+        }, "status")
         
         local statusAccent = utility:Create("Square", {
             Parent = statusFrame,
@@ -1144,7 +1144,7 @@ return function(shared, utility)
             Color = "accent",
             Size = UDim2.new(1, 0, 0, 2),
             Position = UDim2.new(0, 0, 0, 0)
-        }, "menu")
+        }, "status")
         
         local statusTitle = utility:Create("Text", {
             Parent = statusAccent,
@@ -1156,9 +1156,8 @@ return function(shared, utility)
             Color = shared.theme.text,
             Size = 13,
             Position = UDim2.new(0.5, 0, 0, 3)
-        }, "menu")
+        }, "status")
         
-        -- Expose frame for external position updates immediately
         statusWindow.statusFrame = statusFrame
         
         -- // Functions
@@ -1202,7 +1201,7 @@ return function(shared, utility)
                 Color = color or shared.theme.text,
                 Size = 12,
                 Position = UDim2.new(0, 5, 0, yOffset)
-            }, "menu")
+            }, "status")
             
             statusWindow.statusItems[#statusWindow.statusItems + 1] = {
                 text = itemText
@@ -1215,26 +1214,22 @@ return function(shared, utility)
             local contentHeight = 19 + (#statusWindow.statusItems * 15) + 5
             local newHeight = math.max(contentHeight, 30)
             
-            -- Direct size assignment to avoid utility:Update parent issues
             statusFrame.Size = Vector2.new(200, newHeight)
-            statusInline.Size = Vector2.new(198, newHeight - 4) -- 200-2, height-4
+            statusInline.Size = Vector2.new(198, newHeight - 4)
         end
         
         function statusWindow:UpdatePosition(xPercent, yPercent)
-            -- Simply update the main frame position - that's all we need to change
             local newPosition = UDim2.new(xPercent/100, -110, yPercent/100, -100)
             local framePos = Vector2.new(
                 newPosition.X.Scale * (workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize.X or 1024) + newPosition.X.Offset,
                 newPosition.Y.Scale * (workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize.Y or 768) + newPosition.Y.Offset
             )
             
-            -- Update ALL elements manually - the drawing system doesn't handle parent-child automatically
             statusFrame.Position = framePos
             statusInline.Position = Vector2.new(framePos.X + 1, framePos.Y + 3)
             statusAccent.Position = framePos
             statusTitle.Position = Vector2.new(framePos.X + 100, framePos.Y + 3)
             
-            -- Only update status items since they're not proper children
             for i, item in pairs(statusWindow.statusItems) do
                 if item.text then
                     local yOffset = 19 + ((i-1) * 15) + 2
