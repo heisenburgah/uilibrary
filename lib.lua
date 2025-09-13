@@ -1165,7 +1165,6 @@ return function(shared, utility)
             statusAccent.Visible = visible
             statusTitle.Visible = visible
             
-            -- Also control child status items
             for _, item in pairs(statusWindow.statusItems) do
                 if item.text then
                     item.text.Visible = visible
@@ -1193,7 +1192,7 @@ return function(shared, utility)
             local itemText = utility:Create("Text", {
                 Parent = statusFrame,
                 Visible = statusWindow.visible,
-                Text = "• " .. text,
+                Text = "[+] " .. text,
                 Outline = true,
                 Font = 2,
                 Color = color or shared.theme.text,
