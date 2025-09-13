@@ -1221,18 +1221,25 @@ return function(shared, utility)
         
         function statusWindow:UpdatePosition(xPercent, yPercent)
             local newPosition = UDim2.new(xPercent/100, -110, yPercent/100, -100)
+            local camera = workspace.CurrentCamera
+            local viewportSize = camera and camera.ViewportSize or Vector2.new(1024, 768)
 
-            -- Keep everything in UDim2 space to maintain pixel-perfect alignment
-            statusFrame.Position = newPosition
-            statusInline.Position = UDim2.new(xPercent/100, -109, yPercent/100, -97)  -- +1, +3 offset
-            statusAccent.Position = newPosition
-            statusTitle.Position = UDim2.new(xPercent/100, -10, yPercent/100, -97)   -- +100, +3 offset
+            -- Calculate pixel-perfect position by rounding to whole numbers
+            local frameX = math.floor(newPosition.X.Scale * viewportSize.X + newPosition.X.Offset + 0.5)
+            local frameY = math.floor(newPosition.Y.Scale * viewportSize.Y + newPosition.Y.Offset + 0.5)
+            local framePos = Vector2.new(frameX, frameY)
 
-            -- Update item positions to maintain UDim2 positioning
+            -- Set positions using rounded pixel values for crisp rendering
+            statusFrame.Position = framePos
+            statusInline.Position = Vector2.new(frameX + 1, frameY + 3)
+            statusAccent.Position = framePos
+            statusTitle.Position = Vector2.new(frameX + 100, frameY + 3)
+
+            -- Update item positions with pixel-perfect alignment
             for i, item in pairs(statusWindow.statusItems) do
                 if item.text then
                     local yOffset = 19 + ((i-1) * 15) + 2
-                    item.text.Position = UDim2.new(xPercent/100, -105, yPercent/100, -100 + yOffset)  -- +5 x offset
+                    item.text.Position = Vector2.new(frameX + 5, frameY + yOffset)
                 end
             end
         end
