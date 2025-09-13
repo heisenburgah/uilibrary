@@ -1228,15 +1228,13 @@ return function(shared, utility)
                 newPosition.Y.Scale * (workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize.Y or 768) + newPosition.Y.Offset
             )
             
-            -- Update main frame
+            -- Update ALL elements to the same base position (they should stack on top of each other)
             statusFrame.Position = framePos
+            statusInline.Position = framePos  -- Same as frame, not offset
+            statusAccent.Position = framePos  -- Same as frame
+            statusTitle.Position = framePos   -- Same as frame for now
             
-            -- Update child elements to follow the main frame
-            statusInline.Position = Vector2.new(framePos.X + 1, framePos.Y + 3)
-            statusAccent.Position = Vector2.new(framePos.X, framePos.Y)
-            statusTitle.Position = Vector2.new(framePos.X + 100, framePos.Y + 3) -- Centered
-            
-            -- Update status item positions
+            -- Update status items to be relative to frame
             for i, item in pairs(statusWindow.statusItems) do
                 if item.text then
                     local yOffset = 19 + ((i-1) * 15) + 2
