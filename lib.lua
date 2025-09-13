@@ -1114,6 +1114,7 @@ return function(shared, utility)
         }
         local windowProperties = windowProperties or {}
         local windowName = windowProperties.name or "Status Effects"
+        local windowPosition = windowProperties.position or UDim2.new(1, -220, 0.7, -50)
         
         -- // Main Window Elements
         local statusFrame = utility:Create("Square", {
@@ -1122,7 +1123,7 @@ return function(shared, utility)
             Thickness = 0,
             Color = shared.theme.inline,
             Size = UDim2.new(0, 200, 0, 19),
-            Position = UDim2.new(1, -220, 0.7, -50)
+            Position = windowPosition
         }, "menu")
         
         local statusInline = utility:Create("Square", {
@@ -1212,6 +1213,9 @@ return function(shared, utility)
             utility:Update(statusFrame, "Size", UDim2.new(0, 200, 0, math.max(contentHeight, 30)))
             utility:Update(statusInline, "Size", UDim2.new(1, -2, 1, -4), statusFrame)
         end
+        
+        -- Expose frame for external position updates
+        statusWindow.statusFrame = statusFrame
         
         return statusWindow
     end
