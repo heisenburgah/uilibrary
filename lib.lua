@@ -1214,6 +1214,11 @@ return function(shared, utility)
             utility:Update(statusInline, "Size", UDim2.new(1, -2, 1, -4), statusFrame)
         end
         
+        function statusWindow:UpdatePosition(xPercent, yPercent)
+            local newPosition = UDim2.new(xPercent/100, -110, yPercent/100, -100)
+            utility:Update(statusFrame, "Position", newPosition)
+        end
+        
         -- Expose frame for external position updates
         statusWindow.statusFrame = statusFrame
         
