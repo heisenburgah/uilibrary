@@ -1221,20 +1221,20 @@ return function(shared, utility)
         end
         
         function statusWindow:UpdatePosition(xPercent, yPercent)
+            -- Simply update the main frame position - that's all we need to change
             local newPosition = UDim2.new(xPercent/100, -110, yPercent/100, -100)
-            -- Calculate main frame position
             local framePos = Vector2.new(
                 newPosition.X.Scale * (workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize.X or 1024) + newPosition.X.Offset,
                 newPosition.Y.Scale * (workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize.Y or 768) + newPosition.Y.Offset
             )
             
-            -- Update elements with proper relative positioning
+            -- Only update the main frame - let everything else stay relative
             statusFrame.Position = framePos
-            statusInline.Position = Vector2.new(framePos.X + 1, framePos.Y + 3)  -- UDim2.new(0, 1, 0, 3)
-            statusAccent.Position = framePos  -- UDim2.new(0, 0, 0, 0)
-            statusTitle.Position = Vector2.new(framePos.X + 100, framePos.Y + 3)  -- Centered at 50% of 200px width
             
-            -- Update status items
+            -- Don't touch child elements - they should maintain their relative positions automatically
+            -- statusInline, statusAccent, statusTitle should follow the parent
+            
+            -- Only update status items since they're not proper children
             for i, item in pairs(statusWindow.statusItems) do
                 if item.text then
                     local yOffset = 19 + ((i-1) * 15) + 2
