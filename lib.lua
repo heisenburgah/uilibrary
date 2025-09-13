@@ -1106,6 +1106,107 @@ return function(shared, utility)
         return window
     end
 
+    function library:StatusWindow(windowProperties)
+        -- // Variables
+        local statusWindow = {
+            visible = false,
+            statusItems = {}
+        }
+        local windowProperties = windowProperties or {}
+        local windowName = windowProperties.name or "Status Effects"
+        
+        -- // Main Window Elements
+        local statusFrame = utility:Create("Square", {
+            Visible = false,
+            Filled = true,
+            Thickness = 0,
+            Color = shared.theme.inline,
+            Size = UDim2.new(0, 200, 0, 19),
+            Position = UDim2.new(0, 350, 0, 80)
+        }, "menu")
+        
+        local statusInline = utility:Create("Square", {
+            Parent = statusFrame,
+            Visible = true,
+            Filled = true,
+            Thickness = 0,
+            Color = shared.theme.dark,
+            Size = UDim2.new(1, -2, 1, -4),
+            Position = UDim2.new(0, 1, 0, 3)
+        }, "menu")
+        
+        local statusAccent = utility:Create("Square", {
+            Parent = statusFrame,
+            Visible = true,
+            Filled = true,
+            Thickness = 0,
+            Color = "accent",
+            Size = UDim2.new(1, 0, 0, 2),
+            Position = UDim2.new(0, 0, 0, 0)
+        }, "menu")
+        
+        local statusTitle = utility:Create("Text", {
+            Parent = statusAccent,
+            Visible = true,
+            Text = windowName,
+            Center = true,
+            Outline = true,
+            Font = 2,
+            Color = shared.theme.text,
+            Size = 13,
+            Position = UDim2.new(0.5, 0, 0, 3)
+        }, "menu")
+        
+        -- // Functions
+        function statusWindow:SetVisible(visible)
+            statusWindow.visible = visible
+            statusFrame.Visible = visible
+        end
+        
+        function statusWindow:Toggle()
+            statusWindow:SetVisible(not statusWindow.visible)
+        end
+        
+        function statusWindow:Clear()
+            for _, item in pairs(statusWindow.statusItems) do
+                if item.text then
+                    item.text:Remove()
+                end
+            end
+            statusWindow.statusItems = {}
+            statusWindow:UpdateSize()
+        end
+        
+        function statusWindow:AddItem(text, color)
+            local yOffset = 19 + (#statusWindow.statusItems * 15) + 2
+            
+            local itemText = utility:Create("Text", {
+                Parent = statusFrame,
+                Visible = true,
+                Text = "• " .. text,
+                Outline = true,
+                Font = 2,
+                Color = color or shared.theme.text,
+                Size = 12,
+                Position = UDim2.new(0, 5, 0, yOffset)
+            }, "menu")
+            
+            statusWindow.statusItems[#statusWindow.statusItems + 1] = {
+                text = itemText
+            }
+            
+            statusWindow:UpdateSize()
+        end
+        
+        function statusWindow:UpdateSize()
+            local contentHeight = 19 + (#statusWindow.statusItems * 15) + 5
+            utility:Update(statusFrame, "Size", UDim2.new(0, 200, 0, math.max(contentHeight, 30)))
+            utility:Update(statusInline, "Size", UDim2.new(1, -2, 1, -4), statusFrame)
+        end
+        
+        return statusWindow
+    end
+
     function library:Notify(text, color) 
         if shared and shared.pointers["notifications"]:Get() then
             local notification = {
