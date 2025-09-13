@@ -1192,11 +1192,12 @@ return function(shared, utility)
         
         function statusWindow:AddItem(text, color)
             local yOffset = 19 + (#statusWindow.statusItems * 15) + 2
-
+            
             local itemText = utility:Create("Text", {
                 Parent = statusFrame,
                 Visible = statusWindow.visible,
                 Text = "[+] " .. text,
+                Center = true,
                 Outline = true,
                 Font = 2,
                 Color = color or shared.theme.text,
@@ -1220,23 +1221,21 @@ return function(shared, utility)
         end
         
         function statusWindow:UpdatePosition(xPercent, yPercent)
-            -- Calculate base position in UDim2 coordinates
-            local baseX = xPercent / 100
-            local baseY = yPercent / 100
-
-            -- Update main frame
-            statusFrame.Position = UDim2.new(baseX, -110, baseY, -100)
-
-            -- Update all child elements with absolute UDim2 positioning (no parent-child)
-            statusInline.Position = UDim2.new(baseX, -109, baseY, -97)  -- +1, +3 offset
-            statusAccent.Position = UDim2.new(baseX, -110, baseY, -100) -- same as frame
-            statusTitle.Position = UDim2.new(baseX, -10, baseY, -97)    -- +100, +3 offset (centered)
-
-            -- Update all status items with absolute positioning
+            local newPosition = UDim2.new(xPercent/100, -110, yPercent/100, -100)
+            local framePos = Vector2.new(
+                newPosition.X.Scale * (workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize.X or 1024) + newPosition.X.Offset,
+                newPosition.Y.Scale * (workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize.Y or 768) + newPosition.Y.Offset
+            )
+            
+            statusFrame.Position = framePos
+            statusInline.Position = Vector2.new(framePos.X + 1, framePos.Y + 3)
+            statusAccent.Position = framePos
+            statusTitle.Position = Vector2.new(framePos.X + 100, framePos.Y + 3)
+            
             for i, item in pairs(statusWindow.statusItems) do
                 if item.text then
                     local yOffset = 19 + ((i-1) * 15) + 2
-                    item.text.Position = UDim2.new(baseX, -105, baseY, -100 + yOffset) -- +5 x offset
+                    item.text.Position = Vector2.new(framePos.X + 5, framePos.Y + yOffset)
                 end
             end
         end
