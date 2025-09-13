@@ -1122,7 +1122,7 @@ return function(shared, utility)
             Thickness = 0,
             Color = shared.theme.inline,
             Size = UDim2.new(0, 200, 0, 19),
-            Position = UDim2.new(1, -220, 1, -300)
+            Position = UDim2.new(1, -220, 0, 200)
         }, "menu")
         
         local statusInline = utility:Create("Square", {
@@ -1161,6 +1161,14 @@ return function(shared, utility)
         function statusWindow:SetVisible(visible)
             statusWindow.visible = visible
             statusFrame.Visible = visible
+            -- Also hide all child elements
+            if not visible then
+                for _, item in pairs(statusWindow.statusItems) do
+                    if item.text then
+                        item.text.Visible = false
+                    end
+                end
+            end
         end
         
         function statusWindow:Toggle()
@@ -1182,7 +1190,7 @@ return function(shared, utility)
             
             local itemText = utility:Create("Text", {
                 Parent = statusFrame,
-                Visible = true,
+                Visible = statusWindow.visible,
                 Text = "• " .. text,
                 Outline = true,
                 Font = 2,
