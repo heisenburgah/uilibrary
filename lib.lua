@@ -1219,7 +1219,11 @@ return function(shared, utility)
         
         function statusWindow:UpdatePosition(xPercent, yPercent)
             local newPosition = UDim2.new(xPercent/100, -110, yPercent/100, -100)
-            utility:Update(statusFrame, "Position", newPosition)
+            -- Direct position assignment to avoid utility:Update parent issues
+            statusFrame.Position = Vector2.new(
+                newPosition.X.Scale * (workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize.X or 1024) + newPosition.X.Offset,
+                newPosition.Y.Scale * (workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize.Y or 768) + newPosition.Y.Offset
+            )
         end
         
         return statusWindow
