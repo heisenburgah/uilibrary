@@ -1127,7 +1127,7 @@ return function(shared, utility)
         
         local statusInline = utility:Create("Square", {
             Parent = statusFrame,
-            Visible = true,
+            Visible = false,
             Filled = true,
             Thickness = 0,
             Color = shared.theme.dark,
@@ -1137,7 +1137,7 @@ return function(shared, utility)
         
         local statusAccent = utility:Create("Square", {
             Parent = statusFrame,
-            Visible = true,
+            Visible = false,
             Filled = true,
             Thickness = 0,
             Color = "accent",
@@ -1147,7 +1147,7 @@ return function(shared, utility)
         
         local statusTitle = utility:Create("Text", {
             Parent = statusAccent,
-            Visible = true,
+            Visible = false,
             Text = windowName,
             Center = true,
             Outline = true,
@@ -1161,12 +1161,14 @@ return function(shared, utility)
         function statusWindow:SetVisible(visible)
             statusWindow.visible = visible
             statusFrame.Visible = visible
-            -- Also hide all child elements
-            if not visible then
-                for _, item in pairs(statusWindow.statusItems) do
-                    if item.text then
-                        item.text.Visible = false
-                    end
+            statusInline.Visible = visible
+            statusAccent.Visible = visible
+            statusTitle.Visible = visible
+            
+            -- Also control child status items
+            for _, item in pairs(statusWindow.statusItems) do
+                if item.text then
+                    item.text.Visible = visible
                 end
             end
         end
