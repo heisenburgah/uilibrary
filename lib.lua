@@ -1191,7 +1191,7 @@ return function(shared, utility)
         end
         
         function statusWindow:AddItem(text, color)
-            local yOffset = 19 + (#statusWindow.statusItems * 15) + 2
+            local yOffset = 19 + (#statusWindow.statusItems * 17) + 2
             
             local itemText = utility:Create("Text", {
                 Parent = statusFrame,
@@ -1200,7 +1200,7 @@ return function(shared, utility)
                 Outline = true,
                 Font = 2,
                 Color = color or shared.theme.text,
-                Size = 12,
+                Size = 13,
                 Position = UDim2.new(0, 5, 0, yOffset)
             }, "status")
             
@@ -1212,7 +1212,7 @@ return function(shared, utility)
         end
         
         function statusWindow:UpdateSize()
-            local contentHeight = 19 + (#statusWindow.statusItems * 15) + 5
+            local contentHeight = 19 + (#statusWindow.statusItems * 17) + 5
             local newHeight = math.max(contentHeight, 30)
             
             statusFrame.Size = Vector2.new(200, newHeight)
@@ -1233,7 +1233,7 @@ return function(shared, utility)
             
             for i, item in pairs(statusWindow.statusItems) do
                 if item.text then
-                    local yOffset = 19 + ((i-1) * 15) + 2
+                    local yOffset = 19 + ((i-1) * 17) + 2
                     item.text.Position = Vector2.new(framePos.X + 5, framePos.Y + yOffset)
                 end
             end
