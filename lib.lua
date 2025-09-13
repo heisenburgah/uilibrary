@@ -1221,20 +1221,18 @@ return function(shared, utility)
         
         function statusWindow:UpdatePosition(xPercent, yPercent)
             local newPosition = UDim2.new(xPercent/100, -110, yPercent/100, -100)
-            local framePos = Vector2.new(
-                newPosition.X.Scale * (workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize.X or 1024) + newPosition.X.Offset,
-                newPosition.Y.Scale * (workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize.Y or 768) + newPosition.Y.Offset
-            )
-            
-            statusFrame.Position = framePos
-            statusInline.Position = Vector2.new(framePos.X + 1, framePos.Y + 3)
-            statusAccent.Position = framePos
-            statusTitle.Position = Vector2.new(framePos.X + 100, framePos.Y + 3)
-            
+
+            -- Keep everything in UDim2 space to maintain pixel-perfect alignment
+            statusFrame.Position = newPosition
+            statusInline.Position = UDim2.new(xPercent/100, -109, yPercent/100, -97)  -- +1, +3 offset
+            statusAccent.Position = newPosition
+            statusTitle.Position = UDim2.new(xPercent/100, -10, yPercent/100, -97)   -- +100, +3 offset
+
+            -- Update item positions to maintain UDim2 positioning
             for i, item in pairs(statusWindow.statusItems) do
                 if item.text then
                     local yOffset = 19 + ((i-1) * 15) + 2
-                    item.text.Position = Vector2.new(framePos.X + 5, framePos.Y + yOffset)
+                    item.text.Position = UDim2.new(xPercent/100, -105, yPercent/100, -100 + yOffset)  -- +5 x offset
                 end
             end
         end
