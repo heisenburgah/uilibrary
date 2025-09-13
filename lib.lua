@@ -1231,8 +1231,8 @@ return function(shared, utility)
             -- Only update the main frame - let everything else stay relative
             statusFrame.Position = framePos
             
-            -- Fix the title positioning - it needs to be truly centered
-            statusTitle.Position = Vector2.new(framePos.X + 100, framePos.Y + 3) -- 200px/2 = 100px for center
+            -- Don't touch child elements - they should maintain their relative positions automatically
+            -- statusInline, statusAccent, statusTitle should follow the parent
             
             -- Only update status items since they're not proper children
             for i, item in pairs(statusWindow.statusItems) do
