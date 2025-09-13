@@ -1192,7 +1192,7 @@ return function(shared, utility)
         
         function statusWindow:AddItem(text, color)
             local yOffset = 19 + (#statusWindow.statusItems * 15) + 2
-            
+
             local itemText = utility:Create("Text", {
                 Parent = statusFrame,
                 Visible = statusWindow.visible,
@@ -1200,7 +1200,7 @@ return function(shared, utility)
                 Outline = true,
                 Font = 2,
                 Color = color or shared.theme.text,
-                Size = 12,
+                Size = 13,
                 Position = UDim2.new(0, 5, 0, yOffset)
             }, "status")
             
@@ -1220,26 +1220,23 @@ return function(shared, utility)
         end
         
         function statusWindow:UpdatePosition(xPercent, yPercent)
-            local newPosition = UDim2.new(xPercent/100, -110, yPercent/100, -100)
-            local camera = workspace.CurrentCamera
-            local viewportSize = camera and camera.ViewportSize or Vector2.new(1024, 768)
+            -- Calculate base position in UDim2 coordinates
+            local baseX = xPercent / 100
+            local baseY = yPercent / 100
 
-            -- Calculate pixel-perfect position by rounding to whole numbers
-            local frameX = math.floor(newPosition.X.Scale * viewportSize.X + newPosition.X.Offset + 0.5)
-            local frameY = math.floor(newPosition.Y.Scale * viewportSize.Y + newPosition.Y.Offset + 0.5)
-            local framePos = Vector2.new(frameX, frameY)
+            -- Update main frame
+            statusFrame.Position = UDim2.new(baseX, -110, baseY, -100)
 
-            -- Set positions using rounded pixel values for crisp rendering
-            statusFrame.Position = framePos
-            statusInline.Position = Vector2.new(frameX + 1, frameY + 3)
-            statusAccent.Position = framePos
-            statusTitle.Position = Vector2.new(frameX + 100, frameY + 3)
+            -- Update all child elements with absolute UDim2 positioning (no parent-child)
+            statusInline.Position = UDim2.new(baseX, -109, baseY, -97)  -- +1, +3 offset
+            statusAccent.Position = UDim2.new(baseX, -110, baseY, -100) -- same as frame
+            statusTitle.Position = UDim2.new(baseX, -10, baseY, -97)    -- +100, +3 offset (centered)
 
-            -- Update item positions with pixel-perfect alignment
+            -- Update all status items with absolute positioning
             for i, item in pairs(statusWindow.statusItems) do
                 if item.text then
                     local yOffset = 19 + ((i-1) * 15) + 2
-                    item.text.Position = Vector2.new(frameX + 5, frameY + yOffset)
+                    item.text.Position = UDim2.new(baseX, -105, baseY, -100 + yOffset) -- +5 x offset
                 end
             end
         end
