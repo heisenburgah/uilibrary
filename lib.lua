@@ -1200,7 +1200,7 @@ return function(shared, utility)
                 Outline = true,
                 Font = 2,
                 Color = color or shared.theme.text,
-                Size = 13,
+                Size = 12,
                 Position = UDim2.new(0, 5, 0, yOffset)
             }, "status")
             
