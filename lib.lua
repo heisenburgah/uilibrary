@@ -1222,11 +1222,27 @@ return function(shared, utility)
         
         function statusWindow:UpdatePosition(xPercent, yPercent)
             local newPosition = UDim2.new(xPercent/100, -110, yPercent/100, -100)
-            -- Direct position assignment to avoid utility:Update parent issues
-            statusFrame.Position = Vector2.new(
+            -- Calculate main frame position
+            local framePos = Vector2.new(
                 newPosition.X.Scale * (workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize.X or 1024) + newPosition.X.Offset,
                 newPosition.Y.Scale * (workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize.Y or 768) + newPosition.Y.Offset
             )
+            
+            -- Update main frame
+            statusFrame.Position = framePos
+            
+            -- Update child elements to follow the main frame
+            statusInline.Position = Vector2.new(framePos.X + 1, framePos.Y + 3)
+            statusAccent.Position = Vector2.new(framePos.X, framePos.Y)
+            statusTitle.Position = Vector2.new(framePos.X + 100, framePos.Y + 3) -- Centered
+            
+            -- Update status item positions
+            for i, item in pairs(statusWindow.statusItems) do
+                if item.text then
+                    local yOffset = 19 + ((i-1) * 15) + 2
+                    item.text.Position = Vector2.new(framePos.X + 5, framePos.Y + yOffset)
+                end
+            end
         end
         
         return statusWindow
