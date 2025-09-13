@@ -1228,11 +1228,11 @@ return function(shared, utility)
                 newPosition.Y.Scale * (workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize.Y or 768) + newPosition.Y.Offset
             )
             
-            -- Only update the main frame - let everything else stay relative
+            -- Update ALL elements manually - the drawing system doesn't handle parent-child automatically
             statusFrame.Position = framePos
-            
-            -- Don't touch child elements - they should maintain their relative positions automatically
-            -- statusInline, statusAccent, statusTitle should follow the parent
+            statusInline.Position = Vector2.new(framePos.X + 1, framePos.Y + 3)
+            statusAccent.Position = framePos
+            statusTitle.Position = Vector2.new(framePos.X + 100, framePos.Y + 3)
             
             -- Only update status items since they're not proper children
             for i, item in pairs(statusWindow.statusItems) do
