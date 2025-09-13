@@ -1213,8 +1213,11 @@ return function(shared, utility)
         
         function statusWindow:UpdateSize()
             local contentHeight = 19 + (#statusWindow.statusItems * 15) + 5
-            utility:Update(statusFrame, "Size", UDim2.new(0, 200, 0, math.max(contentHeight, 30)))
-            utility:Update(statusInline, "Size", UDim2.new(1, -2, 1, -4), statusFrame)
+            local newHeight = math.max(contentHeight, 30)
+            
+            -- Direct size assignment to avoid utility:Update parent issues
+            statusFrame.Size = Vector2.new(200, newHeight)
+            statusInline.Size = Vector2.new(198, newHeight - 4) -- 200-2, height-4
         end
         
         function statusWindow:UpdatePosition(xPercent, yPercent)
