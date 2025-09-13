@@ -1122,7 +1122,7 @@ return function(shared, utility)
             Thickness = 0,
             Color = shared.theme.inline,
             Size = UDim2.new(0, 200, 0, 19),
-            Position = UDim2.new(1, -220, 0, 200)
+            Position = UDim2.new(1, -220, 0.5, -100)
         }, "menu")
         
         local statusInline = utility:Create("Square", {
