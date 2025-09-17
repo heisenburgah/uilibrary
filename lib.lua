@@ -1,5 +1,5 @@
 -- hydroxide.solutions ui released woohooo
-
+warn("balls")
 -- Services
 local plrs = game:GetService("Players")
 local uis = game:GetService("UserInputService")
@@ -960,6 +960,8 @@ return function(shared, utility)
                                         utility:RemoveConnection(connection)
                                         if #keybind.current > 0 then
                                             keybindCallback(Enum[keybind.current[1]][keybind.current[2]])
+                                        else
+                                            keybindCallback(nil)
                                         end
                                     end
                                 end
@@ -985,9 +987,17 @@ return function(shared, utility)
                             if value and value[1] and value[2] then
                                 local inputProcessed = keybind:Change(Enum[value[1]][value[2]])
                                 --
-                                if inputProcessed and #keybind.current > 0 then
-                                    keybindCallback(Enum[keybind.current[1]][keybind.current[2]])
+                                if inputProcessed then
+                                    if #keybind.current > 0 then
+                                        keybindCallback(Enum[keybind.current[1]][keybind.current[2]])
+                                    else
+                                        keybindCallback(nil)
+                                    end
                                 end
+                            else
+                                keybind.current = {}
+                                keybind.text.Text = keybindName .. " -> " .. "<" .. "..." .. ">"
+                                keybindCallback(nil)
                             end
                         end
                         --
