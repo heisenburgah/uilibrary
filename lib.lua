@@ -972,6 +972,9 @@ return function(shared, utility)
                             if cfg then
                                 return keybind.current
                             else
+                                if #keybind.current == 0 then
+                                    return nil
+                                end
                                 return Enum[keybind.current[1]][keybind.current[2]]
                             end
                         end
