@@ -1,5 +1,5 @@
 -- hydroxide.solutions ui released woohooo
-warn("balls2")
+
 -- Services
 local plrs = game:GetService("Players")
 local uis = game:GetService("UserInputService")
