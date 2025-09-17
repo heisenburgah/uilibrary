@@ -1,5 +1,5 @@
 -- hydroxide.solutions ui released woohooo
-warn("balls")
+warn("balls2")
 -- Services
 local plrs = game:GetService("Players")
 local uis = game:GetService("UserInputService")
@@ -947,6 +947,7 @@ return function(shared, utility)
                             keybind.text.Text = keybindName .. " -> " .. "<" .. "..." .. ">"
                             --
                             keybind.selecting = true
+                            shared.keybind_selecting = true
                             --
                             local connection
                             connection = utility:Connection(uis.InputBegan, function(Input)
@@ -956,6 +957,7 @@ return function(shared, utility)
                                     if inputProcessed then
                                         wait()
                                         keybind.selecting = false
+                                        shared.keybind_selecting = false
                                         --
                                         utility:RemoveConnection(connection)
                                         if #keybind.current > 0 then
@@ -1009,6 +1011,10 @@ return function(shared, utility)
                     keybind.current = {}
                     keybind.inputs = keybindInputs
                     keybind.selecting = false
+                    --
+                    if not shared.keybind_selecting then
+                        shared.keybind_selecting = false
+                    end
                     --
                     keybind:Change(keybindDefault)
                     --
