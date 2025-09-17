@@ -980,7 +980,7 @@ return function(shared, utility)
                         end
                         --
                         function pointer:Set(value)
-                            if value[1] and value[2] then
+                            if value and value[1] and value[2] then
                                 local inputProcessed = keybind:Change(Enum[value[1]][value[2]])
                                 --
                                 if inputProcessed then
