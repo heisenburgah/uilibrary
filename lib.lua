@@ -899,7 +899,11 @@ return function(shared, utility)
                         --
                         if input.EnumType then
                             if input.EnumType == Enum.KeyCode or input.EnumType == Enum.UserInputType then
-                                if table.find(shared.allowedKeyCodes, input.Name) or table.find(shared.allowedInputTypes, input.Name) then
+                                if input.Name == "Backspace" or input.Name == "Escape" then
+                                    keybind.current = {}
+                                    keybind.text.Text = keybindName .. " -> " .. "<" .. "..." .. ">"
+                                    return true
+                                elseif table.find(shared.allowedKeyCodes, input.Name) or table.find(shared.allowedInputTypes, input.Name) then
                                     inputTable = {input.EnumType == Enum.KeyCode and "KeyCode" or "UserInputType", input.Name}
                                     --
                                     keybind.current = inputTable
