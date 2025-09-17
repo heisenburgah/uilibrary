@@ -954,7 +954,6 @@ return function(shared, utility)
                                         keybind.selecting = false
                                         --
                                         utility:RemoveConnection(connection)
-                                        keybindCallback(Enum[keybind.current[1]][keybind.current[2]])
                                     end
                                 end
                             end)
