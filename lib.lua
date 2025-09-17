@@ -1,6 +1,5 @@
 -- hydroxide.solutions ui released woohooo
 
-
 -- Services
 local plrs = game:GetService("Players")
 local uis = game:GetService("UserInputService")
@@ -986,7 +985,7 @@ return function(shared, utility)
                             if value and value[1] and value[2] then
                                 local inputProcessed = keybind:Change(Enum[value[1]][value[2]])
                                 --
-                                if inputProcessed then
+                                if inputProcessed and #keybind.current > 0 then
                                     keybindCallback(Enum[keybind.current[1]][keybind.current[2]])
                                 end
                             end
